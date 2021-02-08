@@ -19,6 +19,7 @@ function WorkflowRepository(props) {
     }
 
     try {
+      setSpinnerFlag(true);
       const response = await axios.get(`https://api.spacexdata.com/v3/launches?limit=100&${qs.stringify(parameter)}`);
       setDataList(response.data);
       setSpinnerFlag(false);
@@ -32,17 +33,12 @@ function WorkflowRepository(props) {
   }, []);
 
   const fliterYear = (ftype, id) => {
-    setSpinnerFlag(true);
     if (ftype === 'launch') {
-      if (id !== selectedLand) {
-        setSelectedLaunch(id)
-        getList(id, selectedLand, selectedYear);
-      }
+      setSelectedLaunch(id)
+      getList(id, selectedLand, selectedYear);
     } else if (ftype === 'land') {
-      if (id !== selectedLaunch) {
-        setSelectedLand(id);
-        getList(selectedLaunch, id, selectedYear);
-      }
+      setSelectedLand(id);
+      getList(selectedLaunch, id, selectedYear);
     } else if (ftype === 'year') {
       const sYear = id !== selectedYear ? id : undefined;
       setSelectedYear(sYear)
