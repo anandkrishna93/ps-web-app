@@ -6,16 +6,16 @@ const IN_PROGRESS = 'data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAA
 
 function WorkflowRepository(props) {
   const [dataList, setDataList] = useState([]);
-  const [selectedLaunch, setSelectedLaunch] = useState(true);
-  const [selectedLand, setSelectedLand] = useState(true);
+  const [selectedLaunch, setSelectedLaunch] = useState('');
+  const [selectedLand, setSelectedLand] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
   const [spinnerFlag, setSpinnerFlag] = useState(true);
 
   const getList = async (launchS, landS, launchY) => {
     const parameter = {
-      launch_success: launchS,
-      land_success: landS,
-      launch_year: launchY
+      launch_success: launchS ? launchS : undefined,
+      land_success: landS ? landS : undefined,
+      launch_year: launchY ? launchY : undefined
     }
 
     try {
@@ -34,13 +34,15 @@ function WorkflowRepository(props) {
 
   const fliterYear = (ftype, id) => {
     if (ftype === 'launch') {
-      setSelectedLaunch(id)
-      getList(id, selectedLand, selectedYear);
+      const sLaunch = id !== selectedLaunch ? id : '';
+      setSelectedLaunch(sLaunch)
+      getList(sLaunch, selectedLand, selectedYear);
     } else if (ftype === 'land') {
-      setSelectedLand(id);
-      getList(selectedLaunch, id, selectedYear);
+      const sLand = id !== selectedLand ? id : '';
+      setSelectedLand(sLand);
+      getList(selectedLaunch, sLand, selectedYear);
     } else if (ftype === 'year') {
-      const sYear = id !== selectedYear ? id : undefined;
+      const sYear = id !== selectedYear ? id : '';
       setSelectedYear(sYear)
       getList(selectedLaunch, selectedLand, sYear);
     }
@@ -71,18 +73,18 @@ function WorkflowRepository(props) {
 
             <h5>Launch success</h5>
             <div>
-              <a className={['ly-btn', selectedLaunch ? 'active' : ''].join(' ')} onClick={(id) => fliterYear('launch', true)}>True</a>
+              <a className={['ly-btn', selectedLaunch === 'true' ? 'active' : ''].join(' ')} onClick={(id) => fliterYear('launch', 'true')}>True</a>
             </div>
             <div>
-              <a className={['ly-btn', selectedLaunch ? '' : 'active'].join(' ')} onClick={(id) => fliterYear('launch', false)}>False</a>
+              <a className={['ly-btn', selectedLaunch === 'false' ? 'active' : ''].join(' ')} onClick={(id) => fliterYear('launch', 'false')}>False</a>
             </div>
 
             <h5>Land success</h5>
             <div>
-              <a className={['ly-btn', selectedLand ? 'active' : ''].join(' ')} onClick={(id) => fliterYear('land', true)}>True</a>
+              <a className={['ly-btn', selectedLand === 'true' ? 'active' : ''].join(' ')} onClick={(id) => fliterYear('land', 'true')}>True</a>
             </div>
             <div>
-              <a className={['ly-btn', selectedLand ? '' : 'active'].join(' ')} onClick={(id) => fliterYear('land', false)}>False</a>
+              <a className={['ly-btn', selectedLand === 'false' ? 'active' : ''].join(' ')} onClick={(id) => fliterYear('land', 'false')}>False</a>
             </div>
           </div>
         </div>
@@ -116,6 +118,10 @@ function WorkflowRepository(props) {
             ) : <h3>No data found !!</h3>
           }
         </div>
+      </div>
+
+      <div className="footer">
+        <p><b>Developed By : </b>Anand Krishna</p>
       </div>
     </React.Fragment>
   );
